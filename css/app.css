@@ -1,5 +1,37 @@
-.text {
-  font-size: 100px;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+main {
+  width: 1080px;
+  margin: 0 auto;
+}
+
+body {
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 20rem;
+  border-radius: 0.5rem;
+  border: 2px solid rgb(225, 225, 225);
+}
+
+button {
+  background-color: blue;
+  color: #fff;
+  border-radius: 1rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 1rem;
 }
 
 /*# sourceMappingURL=app.css.map */
