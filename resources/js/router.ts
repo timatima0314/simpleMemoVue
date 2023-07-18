@@ -3,7 +3,7 @@ const BASE_URL = "/";
 
 import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
-
+import Edit from "./components/Edit.vue"
 const routes = [
     {
         path: "/",
@@ -15,6 +15,12 @@ const routes = [
         name: "Login",
         component: Login,
     },
+    {
+        path: "/edit",
+        name: "Edit",
+        component: Edit,
+    },
+
 ];
 
 const router = createRouter({
