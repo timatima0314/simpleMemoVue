@@ -20,7 +20,10 @@ class SimpleMemosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $simpleMemo = SimpleMemo::create($request->all());
+        return $simpleMemo
+            ? response()->json($simpleMemo, 201)
+            : response()->json([], 500);
     }
 
     /**
@@ -36,7 +39,11 @@ class SimpleMemosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $simpleMemo = SimpleMemo::findorFail($id);
+        $simpleMemo->fill($request->all())->save();
+        return $simpleMemo
+            ? response()->json($simpleMemo, 201)
+            : response()->json([], 500);
     }
 
     /**

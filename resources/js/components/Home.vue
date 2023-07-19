@@ -2,10 +2,10 @@
     <main>
         <div class="registration__box">
             <h2>新規登録</h2>
-            <form class="registration__form">
-                <input type="text" value="" />
-                <button style="margin-left: 1rem">登録</button>
-            </form>
+            <!-- <form class="registration__form"> -->
+            <input type="text" v-model="contentValue" />
+            <button style="margin-left: 1rem" @click="regist">登録</button>
+            <!-- </form> -->
         </div>
         <div class="sammary__box">
             <h3 class="sammary__heading">メモ一覧</h3>
@@ -21,7 +21,7 @@
                     </li>
                     <li class="sammary__item">
                         <div class="sammary__number">1</div>
-                        <div class="sammary__content">testtest</div>
+                        <div class="sammary__content">ダミー</div>
                         <div class="sammary__create-date">2023.07.28</div>
                         <div class="sammary__update-date">2023.07.18</div>
                         <div class="sammary__button">
@@ -33,28 +33,26 @@
                             <button class="delete">削除</button>
                         </div>
                     </li>
-                    <li class="sammary__item">
-                        <div class="sammary__number">1</div>
-                        <div class="sammary__content">testtest</div>
-                        <div class="sammary__create-date">2023.07.28</div>
-                        <div class="sammary__update-date">2023.07.18</div>
+                    <li
+                        class="sammary__item"
+                        v-for="item in memoList"
+                        :key="item.id"
+                    >
+                        <div class="sammary__number">
+                            {{ item.id }}
+                        </div>
+                        <div class="sammary__content">{{ item.content }}</div>
+                        <div class="sammary__create-date">
+                            {{ item.created_at }}
+                        </div>
+                        <div class="sammary__update-date">
+                            {{ item.updated_at }}
+                        </div>
                         <div class="sammary__button">
                             <button class="edit">編集</button>
                         </div>
                         <div class="sammary__button">
-                            <button class="delete">削除</button>
-                        </div>
-                    </li>
-                    <li class="sammary__item">
-                        <div class="sammary__number">1</div>
-                        <div class="sammary__content">testtest</div>
-                        <div class="sammary__create-date">2023.07.28</div>
-                        <div class="sammary__update-date">2023.07.18</div>
-                        <div class="sammary__button">
-                            <button class="edit">編集</button>
-                        </div>
-                        <div class="sammary__button">
-                            <button class="delete">削除</button>
+                            <button class="delete" @click="update(1)">削除</button>
                         </div>
                     </li>
                 </ul>
@@ -62,6 +60,29 @@
         </div>
     </main>
 </template>
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
+import { get, create } from "../api/simpleMemoAPI";
+import axios from "axios";
+const memoList = ref();
+const contentValue = ref("");
+const deleteConf: any = () => {
+    confirm("test");
+};
+const regist = async () => {
+    await create(contentValue.value);
+};
+const update = async (id: number) => {
+    const { data } = await axios.patch(`/api/simple-memo/${id}`, {
+        content: "aaaa",
+        user_id: 1,
+    });
+    return data;
+};
+onMounted(async () => {
+    memoList.value = await get();
+});
+</script>
 <style lang="scss" scoped>
 .registration__box {
     padding: 5rem 0;

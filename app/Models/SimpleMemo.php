@@ -13,7 +13,7 @@ class SimpleMemo extends Model
     protected $fillable = [
         'content', 'user_id'
     ];
-    protected $casts = [
-        'user_id' => 'int'
-    ];
+    // protected $casts = [
+    //     'user_id' => 'int'
+    // ];
 }
