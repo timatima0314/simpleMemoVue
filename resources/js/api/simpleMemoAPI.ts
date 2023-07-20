@@ -31,4 +31,8 @@ const update = async (id: string | string[], contentVal: string) => {
     return data;
 };
 
-export { get, create, update }
+const destroy = async (id: number) => {
+    const { data } = await axios.delete(`/api/simple-memo/${id}`);
+    return data;
+}
+export { get, create, update, destroy }

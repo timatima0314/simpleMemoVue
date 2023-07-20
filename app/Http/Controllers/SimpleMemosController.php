@@ -51,6 +51,10 @@ class SimpleMemosController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $simpleMemo = SimpleMemo::findorFail($id);
+        $simpleMemo->delete();
+        return $simpleMemo
+            ? response()->json($simpleMemo, 201)
+            : response()->json([], 500);
     }
 }
