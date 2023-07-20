@@ -25,9 +25,7 @@
                         <div class="sammary__create-date">2023.07.28</div>
                         <div class="sammary__update-date">2023.07.18</div>
                         <div class="sammary__button">
-                            <router-link to="/edit">
                                 <button class="edit">編集</button>
-                            </router-link>
                         </div>
                         <div class="sammary__button">
                             <button class="delete">削除</button>
@@ -49,10 +47,14 @@
                             {{ item.updated_at }}
                         </div>
                         <div class="sammary__button">
-                            <button class="edit">編集</button>
+                            <router-link
+                                :to="{ name: 'Edit', params: { id: item.id} }"
+                            >
+                                <button class="edit">編集</button>
+                            </router-link>
                         </div>
                         <div class="sammary__button">
-                            <button class="delete" @click="update(1)">削除</button>
+                            <button class="delete" @click="">削除</button>
                         </div>
                     </li>
                 </ul>
@@ -71,13 +73,6 @@ const deleteConf: any = () => {
 };
 const regist = async () => {
     await create(contentValue.value);
-};
-const update = async (id: number) => {
-    const { data } = await axios.patch(`/api/simple-memo/${id}`, {
-        content: "aaaa",
-        user_id: 1,
-    });
-    return data;
 };
 onMounted(async () => {
     memoList.value = await get();

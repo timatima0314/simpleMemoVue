@@ -16,8 +16,9 @@ const routes = [
         component: Login,
     },
     {
-        path: "/edit",
+        path: "/edit/:id",
         name: "Edit",
+        props:true,
         component: Edit,
     },
 
