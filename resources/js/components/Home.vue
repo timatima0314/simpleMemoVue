@@ -5,6 +5,9 @@
             <form class="registration__form" @submit.prevent>
                 <input type="text" v-model="contentValue" />
                 <button style="margin-left: 1rem" @click="regist">登録</button>
+                <div class="error__messages">
+                    <span v-if="errorsMessages">{{ errorsMessages }}</span>
+                </div>
             </form>
         </div>
         <div class="sammary__box">
@@ -66,9 +69,20 @@ import { get, create, destroy } from "../api/simpleMemoAPI";
 import axios from "axios";
 const memoList = ref();
 const contentValue = ref("");
+const errorsMessages = ref("");
 const regist = async () => {
-    await create(contentValue.value);
-    contentValue.value = "";
+    await create(contentValue.value)
+        .then((res) => {
+            if (res.status == 400) {
+                errorsMessages.value = res.errors.content[0];
+            } else {
+                errorsMessages.value = "";
+                contentValue.value = "";
+            }
+        })
+        .catch((errors) => {
+            console.log(errors.status);
+        });
     memoList.value = await get();
 };
 const delConfOpen = async (id: number) => {
@@ -86,6 +100,10 @@ onMounted(async () => {
 .registration__box {
     padding: 5rem 0;
     border-bottom: 3px solid rgb(225, 225, 225);
+}
+.error__messages {
+    color: red;
+    height: 2rem;
 }
 .sammary__heading {
     line-height: 6rem;

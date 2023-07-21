@@ -15,7 +15,7 @@ const get = async () => {
 
 //DB:simpleMemoのデータ作成
 const create = async (contentVal: string) => {
-    const { data } = await axios.post<simpleMemo>(`/api/simple-memo`, {
+    const { data } = await axios.post(`/api/simple-memo`, {
         content: contentVal,
         user_id: 1,
     });
