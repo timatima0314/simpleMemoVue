@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SimpleMemo;
+use App\Http\Requests\simpleMemoRequest;
 
 class SimpleMemosController extends Controller
 {
@@ -18,7 +19,7 @@ class SimpleMemosController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(simpleMemoRequest $request)
     {
         $simpleMemo = SimpleMemo::create($request->all());
         return $simpleMemo
@@ -37,7 +38,7 @@ class SimpleMemosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(simpleMemoRequest $request, string $id)
     {
         $simpleMemo = SimpleMemo::findorFail($id);
         $simpleMemo->fill($request->all())->save();
