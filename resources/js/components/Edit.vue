@@ -3,7 +3,7 @@
         <h2 class="edit__heading">No{{ route.params.id }}&nbsp;メモ編集</h2>
         <div class="edit__box">
             <div class="edit__titel">メモ内容</div>
-            <form>
+            <form @submit.prevent>
                 <input
                     class="edit__input"
                     type="text"
@@ -13,13 +13,15 @@
                 <div class="error__messages">
                     <span v-if="errorsMessages">{{ errorsMessages }}</span>
                 </div>
+                <div class="edit__button-wrap">
+                    <router-link to="/"
+                        ><button type="button" class="back">
+                            戻る
+                        </button></router-link
+                    >
+                    <button @click="updateExe">修正</button>
+                </div>
             </form>
-            <div class="edit__button-wrap">
-                <router-link to="/"
-                    ><button class="back">戻る</button></router-link
-                >
-                <button @click="upd">修正</button>
-            </div>
         </div>
     </main>
 </template>
@@ -39,7 +41,7 @@ const editItemGet = async () => {
         contentEdit.value = filterData[0].content;
     });
 };
-const upd = async () => {
+const updateExe = async () => {
     await update(route.params.id, contentEdit.value).then((res) => {
         if (res.status == 400) {
             errorsMessages.value = res.errors.content[0];
