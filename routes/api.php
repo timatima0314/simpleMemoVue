@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SimpleMemosController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,8 +16,14 @@ use App\Http\Controllers\SimpleMemosController;
 |
 */
 
-Route::apiResource('/simple-memo', SimpleMemosController::class);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middlewarewe' => 'auth:sanctum'], function () {
+    Route::apiResource('/simple-memo', SimpleMemosController::class);
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('singUp', [RegisterController::class, 'register']);
+
+    Route::get('user', function (Request $request) {
+        return $request->user();
+    });
 });

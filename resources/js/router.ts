@@ -3,7 +3,8 @@ const BASE_URL = "/";
 
 import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
-import Edit from "./components/Edit.vue"
+import Singup from "./components/Singup.vue";
+import Edit from "./components/Edit.vue";
 const routes = [
     {
         path: "/",
@@ -14,6 +15,11 @@ const routes = [
         path: "/login",
         name: "Login",
         component: Login,
+    },
+    {
+        path: "/singup",
+        name: "SingUp",
+        component: Singup,
     },
     {
         path: "/edit/:id",

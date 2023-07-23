@@ -64,12 +64,17 @@
     </main>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted, onUpdated } from "vue";
+import { ref, onMounted } from "vue";
 import { get, create, destroy } from "../api/simpleMemoAPI";
-import axios from "axios";
+import { getAuth } from "../api/authApi";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
 const memoList = ref();
 const contentValue = ref("");
 const errorsMessages = ref("");
+
 const regist = async () => {
     await create(contentValue.value)
         .then((res) => {
@@ -93,7 +98,11 @@ const delConfOpen = async (id: number) => {
     }
 };
 onMounted(async () => {
-    memoList.value = await get();
+    if (await getAuth()) {
+        memoList.value = await get();
+    } else {
+        router.push("/login");
+    }
 });
 </script>
 <style lang="scss" scoped>

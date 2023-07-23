@@ -1,19 +1,26 @@
 <template>
     <main>
-        <div class="login">
-            <div class="loginForm__box">
-                <div class="loginForm__heading">ログイン</div>
-                <form @submit.prevent>
-                    <table class="loginForm__table">
+        <div class="singup">
+            <div class="singupForm__box">
+                <div class="singupForm__heading">新規登録</div>
+                <form style="margin-top: 4rem" @submit.prevent>
+                    <table class="singupForm__table">
+                        <tr>
+                            <td class="singupForm__label">名前</td>
+                            <td class="singupForm__input-wrap">
+                                <input type="text" v-model="name" />
+                            </td>
+                        </tr>
+
                         <tr style="height: 7rem">
-                            <td class="loginForm__label">メールアドレス</td>
-                            <td class="loginForm__input-wrap">
+                            <td class="singupForm__label">メールアドレス</td>
+                            <td class="singupForm__input-wrap">
                                 <input type="text" v-model="email" />
                             </td>
                         </tr>
                         <tr>
-                            <td class="loginForm__label">パスワード</td>
-                            <td class="loginForm__input-wrap">
+                            <td class="singupForm__label">パスワード</td>
+                            <td class="singupForm__input-wrap">
                                 <input type="password" v-model="password" />
                             </td>
                         </tr>
@@ -25,18 +32,11 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td style="height: 3rem">
-                                <input
-                                    class="visually-hidden"
-                                    type="radio"
-                                /><label>ログイン情報を記憶</label>
-                            </td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td class="loginForm__button">
-                                <button @click="loginApp">ログイン</button>
-                                <span>パスワードをお忘れですか？</span>
+                            <td class="singupForm__button">
+                                <button @click="singUpApp">新規登録</button>
                             </td>
                         </tr>
                     </table>
@@ -47,30 +47,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from "vue";
+import { inject, ref } from "vue";
 import { useRouter } from "vue-router";
-import { login } from "../api/authApi";
+import { singUp, login } from "../api/authApi";
 import { key } from "../store/index";
-
 const router = useRouter();
-const email = ref("test2@example.com");
-const password = ref("Kz5guSRG");
 const store = inject(key);
+const name = ref("user");
+const email = ref("user@example.com");
+const password = ref("Kz5guSRG");
 const errorMessage = ref("");
 
-const loginApp = () => {
-    login(email.value, password.value)
+const singUpApp = async () => {
+    singUp(name.value, email.value, password.value)
         .then(() => {
             store.authUser();
-            router.push("/");
+            login(email.value, password.value)
+                .then(() => {
+                    store.authUser();
+                    router.push("/");
+                })
+                .catch((err) => {
+                    errorMessage.value = err.response.data.errorMessage;
+                });
         })
-        .catch((err) => {
-            errorMessage.value = err.response.data.errorMessage;
+        .catch(() => {
+            errorMessage.value =
+                "新規登録できませんでした。メールアドレスを確認ください。";
         });
 };
 </script>
 <style lang="scss" scoped>
-.login {
+.singup {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -78,15 +86,15 @@ const loginApp = () => {
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
 }
-.loginForm__box {
+.singupForm__box {
     border: 2px solid rgb(225, 225, 225);
     width: 40rem;
     font-weight: bold;
 }
-.loginForm__table {
+.singupForm__table {
     margin: 2rem auto 3rem;
 }
-.loginForm__heading {
+.singupForm__heading {
     background-color: rgb(219, 219, 219);
     height: 4rem;
     font-size: 1.2rem;
@@ -95,10 +103,10 @@ const loginApp = () => {
     align-items: center;
     border-bottom: 2px solid rgb(225, 225, 225);
 }
-.loginForm__label {
+.singupForm__label {
     width: 10rem;
 }
-.loginForm__button {
+.singupForm__button {
     span {
         font-weight: 100;
         color: gray;
