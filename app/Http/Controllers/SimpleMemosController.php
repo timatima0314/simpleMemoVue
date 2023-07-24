@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SimpleMemo;
 use App\Http\Requests\simpleMemoRequest;
+use Illuminate\Support\Facades\Auth;
 
 class SimpleMemosController extends Controller
 {
@@ -13,7 +14,7 @@ class SimpleMemosController extends Controller
      */
     public function index()
     {
-        return SimpleMemo::all();
+        return SimpleMemo::where('user_id', Auth::id())->orderByDesc('id')->get();
     }
 
     /**
