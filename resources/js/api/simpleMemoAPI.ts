@@ -14,19 +14,18 @@ const get = async () => {
 };
 
 //DB:simpleMemoのデータ作成
-const create = async (contentVal: string) => {
+const create = async (contentVal: string, currentUserId: number) => {
     const { data } = await axios.post(`/api/simple-memo`, {
         content: contentVal,
-        user_id: 1,
+        user_id: currentUserId,
     });
     return data;
 };
 
-//DB:dimpleMemoのデータ更新
-const update = async (id: string | string[], contentVal: string) => {
+//DB:smpleMemoのデータ更新
+const update = async (id: string | string[], contentVal: string, ) => {
     const { data } = await axios.patch(`/api/simple-memo/${id}`, {
         content: contentVal,
-        user_id: 1,
     });
     return data;
 };

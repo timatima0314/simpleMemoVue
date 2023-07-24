@@ -24,11 +24,11 @@
                     </li>
                     <li
                         class="sammary__item"
-                        v-for="item in memoList"
+                        v-for="(item, i) in memoList"
                         :key="item.id"
                     >
                         <div class="sammary__number">
-                            {{ item.id }}
+                            {{ i + 1 }}
                         </div>
                         <div class="sammary__content">
                             {{ item.content }}
@@ -40,14 +40,14 @@
                             {{ item.updated_at }}
                         </div>
                         <div class="sammary__button">
-                            <router-link
-                                :to="{
-                                    name: 'Edit',
-                                    params: { id: item.id },
-                                }"
+                            <button
+                                class="edit"
+                                @click="edit"
+                                :data-id="item.id"
+                                :data-index="i + 1"
                             >
-                                <button class="edit">編集</button>
-                            </router-link>
+                                編集
+                            </button>
                         </div>
                         <div class="sammary__button">
                             <button
@@ -73,10 +73,23 @@ const router = useRouter();
 
 const memoList = ref();
 const contentValue = ref("");
+const currentUserId = ref();
 const errorsMessages = ref("");
 
+const edit = (e) => {
+    const dbId = e.target.dataset.id;
+    const index = e.target.dataset.index;
+    router.push({
+        name: "Edit",
+        query: {
+            editId: dbId,
+            indexId: index,
+        },
+    });
+};
+
 const regist = async () => {
-    await create(contentValue.value)
+    await create(contentValue.value, currentUserId.value)
         .then((res) => {
             if (res.status == 400) {
                 errorsMessages.value = res.errors.content[0];
@@ -98,8 +111,10 @@ const delConfOpen = async (id: number) => {
     }
 };
 onMounted(async () => {
+    const currentUserData = await getAuth();
     if (await getAuth()) {
         memoList.value = await get();
+        currentUserId.value = currentUserData.id;
     } else {
         router.push("/login");
     }

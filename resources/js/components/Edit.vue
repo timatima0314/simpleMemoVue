@@ -1,6 +1,6 @@
 <template>
     <main>
-        <h2 class="edit__heading">No{{ route.params.id }}&nbsp;メモ編集</h2>
+        <h2 class="edit__heading">No{{ propIndexId }}&nbsp;メモ編集</h2>
         <div class="edit__box">
             <div class="edit__titel">メモ内容</div>
             <form @submit.prevent>
@@ -26,23 +26,25 @@
     </main>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineProps } from "vue";
 import { useRoute } from "vue-router";
 import { get, update } from "../api/simpleMemoAPI";
 
+const propEditId = ref();
+const propIndexId = ref();
 const route = useRoute();
 const contentEdit = ref("");
 const errorsMessages = ref("");
 const editItemGet = async () => {
     await get().then((item) => {
         const filterData = item.filter((val) => {
-            return val.id == route.params.id;
+            return val.id == propEditId.value;
         });
         contentEdit.value = filterData[0].content;
     });
 };
 const updateExe = async () => {
-    await update(route.params.id, contentEdit.value).then((res) => {
+    await update(propEditId.value, contentEdit.value).then((res) => {
         if (res.status == 400) {
             errorsMessages.value = res.errors.content[0];
         } else {
@@ -52,6 +54,8 @@ const updateExe = async () => {
 };
 onMounted(async () => {
     editItemGet();
+    propEditId.value = route.query.editId;
+    propIndexId.value = route.query.indexId;
 });
 </script>
 

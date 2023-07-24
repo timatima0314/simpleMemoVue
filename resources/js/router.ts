@@ -22,9 +22,8 @@ const routes = [
         component: Singup,
     },
     {
-        path: "/edit/:id",
+        path: "/edit/",
         name: "Edit",
-        props:true,
         component: Edit,
     },
 
