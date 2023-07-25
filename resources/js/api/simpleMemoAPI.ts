@@ -1,12 +1,5 @@
-import axios from 'axios';
-
-type simpleMemo = {
-    id: number;
-    content: string;
-    created_at: Date;
-    updated_at: Date;
-};
-
+import axios,{AxiosResponse} from 'axios';
+import { SimpleMemo } from '../type/type';
 //DB:simpleMemoのデータ取得
 const get = async () => {
     const { data } = await axios.get(`/api/simple-memo`);
@@ -14,7 +7,7 @@ const get = async () => {
 };
 
 //DB:simpleMemoのデータ作成
-const create = async (contentVal: string, currentUserId: number) => {
+const create = async (contentVal: string, currentUserId: number | undefined) => {
     const { data } = await axios.post(`/api/simple-memo`, {
         content: contentVal,
         user_id: currentUserId,
@@ -23,7 +16,7 @@ const create = async (contentVal: string, currentUserId: number) => {
 };
 
 //DB:smpleMemoのデータ更新
-const update = async (id: string | string[], contentVal: string, ) => {
+const update = async (id: number, contentVal: string,) => {
     const { data } = await axios.patch(`/api/simple-memo/${id}`, {
         content: contentVal,
     });
@@ -31,7 +24,7 @@ const update = async (id: string | string[], contentVal: string, ) => {
 };
 
 const destroy = async (id: number) => {
-    const { data } = await axios.delete(`/api/simple-memo/${id}`);
+    const { data } = await axios.delete<SimpleMemo>(`/api/simple-memo/${id}`);
     return data;
 }
 export { get, create, update, destroy }
