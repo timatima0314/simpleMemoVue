@@ -53,9 +53,9 @@ import { singUp, login } from "../api/authApi";
 import { key } from "../store/index";
 const router = useRouter();
 const store = inject(key);
-const name = ref("user");
-const email = ref("user@example.com");
-const password = ref("Kz5guSRG");
+const name = ref("");
+const email = ref("");
+const password = ref("");
 const errorMessage = ref("");
 
 const singUpApp = async () => {

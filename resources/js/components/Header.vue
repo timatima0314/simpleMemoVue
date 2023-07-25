@@ -6,7 +6,6 @@
                     <router-link to="/">Simple Memo</router-link>
                 </h1>
             </div>
-
             <div class="header__auth">
                 <div v-if="!store.state.auth" class="header__auth__item">
                     <router-link to="/login">ログイン</router-link>

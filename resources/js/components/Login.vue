@@ -53,8 +53,8 @@ import { login } from "../api/authApi";
 import { key } from "../store/index";
 
 const router = useRouter();
-const email = ref("test2@example.com");
-const password = ref("Kz5guSRG");
+const email = ref("");
+const password = ref("");
 const store = inject(key);
 const errorMessage = ref("");
 

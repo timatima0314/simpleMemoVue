@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use \Symfony\Component\HttpFoundation\Response;
 
 use Illuminate\Http\Request;

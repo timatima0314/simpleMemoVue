@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\SimpleMemo;
 use App\Http\Requests\simpleMemoRequest;
 use Illuminate\Support\Facades\Auth;
@@ -26,14 +25,6 @@ class SimpleMemosController extends Controller
         return $simpleMemo
             ? response()->json($simpleMemo, 201)
             : response()->json([], 500);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
