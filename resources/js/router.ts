@@ -5,6 +5,7 @@ import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
 import Singup from "./components/Singup.vue";
 import Edit from "./components/Edit.vue";
+import NotFound from "./components/NotFound.vue";
 const routes = [
     {
         path: "/",
@@ -26,7 +27,7 @@ const routes = [
         name: "Edit",
         component: Edit,
     },
-
+    { path: '/:catchAll(.*)', component: NotFound }
 ];
 
 const router = createRouter({
