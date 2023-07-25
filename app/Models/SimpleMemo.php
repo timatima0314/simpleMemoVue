@@ -13,7 +13,9 @@ class SimpleMemo extends Model
     protected $fillable = [
         'content', 'user_id'
     ];
-    // protected $casts = [
-    //     'user_id' => 'int'
-    // ];
+    protected $casts = [
+        'created_at' => 'datetime:Y.m.d',
+        'updated_at' => 'datetime:Y.m.d',
+
+    ];
 }
