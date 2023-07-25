@@ -1,28 +1,29 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { UserData } from '../type/type';
 
-const singUp = async (nameVal, emailVal, passwordVal) => {
+const singUp = async (nameVal: string, emailVal: string, passwordVal: string) => {
     await axios
-        .post("/api/singUp", {
+        .post<AxiosResponse | UserData>("/api/singUp", {
             name: nameVal,
             email: emailVal,
             password: passwordVal,
         })
 };
 
-const login = async (emailVal, passwordVal) => {
+const login = async (emailVal: string, passwordVal: string) => {
     await axios
-        .post("/api/login", {
+        .post<AxiosResponse | UserData>("/api/login", {
             email: emailVal,
             password: passwordVal,
         })
 };
 
 const logout = async () => {
-    await axios.post("/api/logout")
+    await axios.post<AxiosResponse | UserData>("/api/logout")
 };
 
 const getAuth = async () => {
-   const {data}= await axios.get('/api/user')
+    const { data } = await axios.get<UserData>('/api/user')
     return data
 }
 

@@ -1,4 +1,4 @@
-import axios,{AxiosResponse} from 'axios';
+import axios from 'axios';
 import { SimpleMemo } from '../type/type';
 //DB:simpleMemoのデータ取得
 const get = async () => {
