@@ -5,18 +5,35 @@
                 <div class="loginForm__heading">ログイン</div>
                 <form @submit.prevent>
                     <table class="loginForm__table">
-                        <tr style="height: 7rem">
+                        <tr class="login__Form__tr">
                             <td class="loginForm__label">メールアドレス</td>
                             <td class="loginForm__input-wrap">
                                 <input type="text" v-model="email" />
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="login__Form__tr error">
+                            <td></td>
+                            <td>
+                                {{ valiErrorMessage.email[0] }}
+                            </td>
+                        </tr>
+
+                        <tr class="login__Form__tr">
                             <td class="loginForm__label">パスワード</td>
                             <td class="loginForm__input-wrap">
                                 <input type="password" v-model="password" />
                             </td>
                         </tr>
+                        <tr
+                            v-if="valiErrorMessage.password"
+                            class="login__Form__tr error"
+                        >
+                            <td></td>
+                            <td>
+                                {{ valiErrorMessage.password[0] }}
+                            </td>
+                        </tr>
+
                         <tr>
                             <td></td>
                             <td v-if="errorMessage" style="color: red">
@@ -47,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from "vue";
+import { ref, inject, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { login } from "../api/authApi";
 import { key } from "../store/index";
@@ -56,6 +73,7 @@ const router = useRouter();
 const email = ref("");
 const password = ref("");
 const store = inject(key);
+const valiErrorMessage = reactive({ email: "", password: "" });
 const errorMessage = ref("");
 
 const loginApp = () => {
@@ -64,8 +82,11 @@ const loginApp = () => {
             store.authUser();
             router.push("/");
         })
-        .catch((err) => {
-            errorMessage.value = err.response.data.errorMessage;
+        .catch((Error) => {
+            errorMessage.value = Error.response.data.errorMessage;
+            const ErrorRes = Error.response.data.errors;
+            valiErrorMessage.email = ErrorRes.email;
+            valiErrorMessage.password = ErrorRes.password;
         });
 };
 </script>
@@ -94,6 +115,9 @@ const loginApp = () => {
     display: flex;
     align-items: center;
     border-bottom: 2px solid rgb(225, 225, 225);
+}
+.login__Form__tr {
+    height: 38px;
 }
 .loginForm__label {
     width: 10rem;
@@ -154,5 +178,8 @@ label::after {
 
 input:checked + label::after {
     opacity: 1;
+}
+.error {
+    color: red;
 }
 </style>

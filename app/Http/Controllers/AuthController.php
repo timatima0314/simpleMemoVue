@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use \Symfony\Component\HttpFoundation\Response;
-
 use Illuminate\Http\Request;
+use App\Http\Requests\AuthRequest;
 
 class AuthController extends Controller
 {
@@ -13,7 +13,7 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request)
+    public function login(AuthRequest $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
