@@ -26,9 +26,12 @@
     </main>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, defineProps } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import { getAuth } from "../api/authApi";
 import { get, update } from "../api/simpleMemoAPI";
+import router from "../router";
+import { SimpleMemo } from "../type/type";
 
 const propEditId = ref();
 const propIndexId = ref();
@@ -36,8 +39,8 @@ const route = useRoute();
 const contentEdit = ref("");
 const errorsMessages = ref("");
 const editItemGet = async () => {
-    await get().then((item) => {
-        const filterData = item.filter((val) => {
+    await get().then((item: SimpleMemo[]) => {
+        const filterData = item.filter((val: SimpleMemo) => {
             return val.id == propEditId.value;
         });
         contentEdit.value = filterData[0].content;
@@ -53,6 +56,9 @@ const updateExe = async () => {
     });
 };
 onMounted(async () => {
+    if (!(await getAuth())) {
+        router.push("/login");
+    }
     editItemGet();
     propEditId.value = route.query.editId;
     propIndexId.value = route.query.indexId;

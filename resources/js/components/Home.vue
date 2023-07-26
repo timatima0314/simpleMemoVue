@@ -4,7 +4,9 @@
             <h2>新規登録</h2>
             <form class="registration__form" @submit.prevent>
                 <input type="text" v-model="contentValue" />
-                <button style="margin-left: 1rem" @click="regist">登録</button>
+                <button style="margin-left: 1rem" @click="createExe">
+                    登録
+                </button>
                 <div class="error__messages">
                     <span v-if="errorsMessages">{{ errorsMessages }}</span>
                 </div>
@@ -68,17 +70,18 @@ import { ref, onMounted } from "vue";
 import { get, create, destroy } from "../api/simpleMemoAPI";
 import { getAuth } from "../api/authApi";
 import { useRouter } from "vue-router";
+import { SimpleMemo } from "../type/type";
 
 const router = useRouter();
 
-const memoList = ref();
+const memoList = ref<SimpleMemo[]>();
 const contentValue = ref("");
-const currentUserId = ref();
+const currentUserId = ref<number>();
 const errorsMessages = ref("");
 
-const edit = (e) => {
-    const dbId = e.target.dataset.id;
-    const index = e.target.dataset.index;
+const edit = (event) => {
+    const dbId = event.target.dataset.id;
+    const index = event.target.dataset.index;
     router.push({
         name: "Edit",
         query: {
@@ -88,7 +91,7 @@ const edit = (e) => {
     });
 };
 
-const regist = async () => {
+const createExe = async () => {
     await create(contentValue.value, currentUserId.value)
         .then((res) => {
             if (res.status == 400) {
@@ -99,21 +102,30 @@ const regist = async () => {
             }
         })
         .catch((errors) => {
-            console.log(errors.status);
+            throw new Error(`${errors.status}:createApi失敗`);
         });
     memoList.value = await get();
 };
 const delConfOpen = async (id: number) => {
     const delConf = confirm("本当に削除してもよろしいでしょうか？");
     if (delConf) {
-        destroy(id);
-        memoList.value = await get();
+        destroy(id)
+            .then(async () => {
+                memoList.value = await get();
+            })
+            .catch((Error) => {
+                throw new Error(`${Error.message}: destroyApi失敗`);
+            });
     }
 };
 onMounted(async () => {
-    const currentUserData = await getAuth();
-    if (await getAuth()) {
-        memoList.value = await get();
+    const currentUserData = await getAuth().catch((Error) => {
+        throw new Error(`${Error.message}: getAuth失敗`);
+    });
+    if (currentUserData) {
+        memoList.value = await get().catch((Error) => {
+            throw new Error(`${Error.message}: get失敗`);
+        });
         currentUserId.value = currentUserData.id;
     } else {
         router.push("/login");
@@ -149,6 +161,7 @@ onMounted(async () => {
     }
     .sammary__content {
         width: 20rem;
+        line-height: 1.5rem;
         text-align: left;
     }
     .sammary__create-date {
