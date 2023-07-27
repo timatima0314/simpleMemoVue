@@ -13,7 +13,7 @@
                         </tr>
                         <tr class="login__Form__tr error">
                             <td></td>
-                            <td>
+                            <td v-if="valiErrorMessage.email">
                                 {{ valiErrorMessage.email[0] }}
                             </td>
                         </tr>
@@ -24,23 +24,19 @@
                                 <input type="password" v-model="password" />
                             </td>
                         </tr>
-                        <tr
-                            v-if="valiErrorMessage.password"
-                            class="login__Form__tr error"
-                        >
+                        <tr class="login__Form__tr error">
                             <td></td>
-                            <td>
+                            <td v-if="valiErrorMessage.password">
                                 {{ valiErrorMessage.password[0] }}
                             </td>
                         </tr>
-
                         <tr>
                             <td></td>
                             <td v-if="errorMessage" style="color: red">
                                 {{ errorMessage }}
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="height: 1rem">
                             <td></td>
                             <td style="height: 3rem">
                                 <input
@@ -73,20 +69,24 @@ const router = useRouter();
 const email = ref("");
 const password = ref("");
 const store = inject(key);
-const valiErrorMessage = reactive({ email: "", password: "" });
+const valiErrorMessage = ref({ email: "", password: "" });
 const errorMessage = ref("");
 
 const loginApp = () => {
+    valiErrorMessage.value = { email: "", password: "" };
     login(email.value, password.value)
         .then(() => {
             store.authUser();
             router.push("/");
         })
         .catch((Error) => {
-            errorMessage.value = Error.response.data.errorMessage;
-            const ErrorRes = Error.response.data.errors;
-            valiErrorMessage.email = ErrorRes.email;
-            valiErrorMessage.password = ErrorRes.password;
+            if (Error.response.status == 400) {
+                console.log(Error);
+                const ErrorRes = Error.response.data.errors;
+                valiErrorMessage.value = ErrorRes;
+            } else {
+                errorMessage.value = Error.response.data.errorMessage;
+            }
         });
 };
 </script>

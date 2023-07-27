@@ -5,33 +5,44 @@
                 <div class="singupForm__heading">新規登録</div>
                 <form style="margin-top: 4rem" @submit.prevent>
                     <table class="singupForm__table">
-                        <tr>
+                        <tr class="singupForm__tr">
                             <td class="singupForm__label">名前</td>
                             <td class="singupForm__input-wrap">
                                 <input type="text" v-model="name" />
                             </td>
                         </tr>
+                        <tr class="singupForm__tr error">
+                            <td></td>
+                            <td v-if="errorMessage.name">
+                                {{ errorMessage.name[0] }}
+                            </td>
+                            <!-- <td v-else></td> -->
+                        </tr>
 
-                        <tr style="height: 7rem">
+                        <tr class="singupForm__tr">
                             <td class="singupForm__label">メールアドレス</td>
                             <td class="singupForm__input-wrap">
                                 <input type="text" v-model="email" />
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="singupForm__tr error">
+                            <td></td>
+                            <td v-if="errorMessage.email">
+                                {{ errorMessage.email[0] }}
+                            </td>
+                        </tr>
+
+                        <tr class="singupForm__tr">
                             <td class="singupForm__label">パスワード</td>
                             <td class="singupForm__input-wrap">
                                 <input type="password" v-model="password" />
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="login__Form__tr error">
                             <td></td>
-                            <td v-if="errorMessage" style="color: red">
-                                {{ errorMessage }}
+                            <td v-if="errorMessage.password">
+                                {{ errorMessage.password[0] }}
                             </td>
-                        </tr>
-                        <tr>
-                            <td></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -47,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from "vue";
+import { inject, ref, reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { singUp, login } from "../api/authApi";
 import { key } from "../store/index";
@@ -56,7 +67,7 @@ const store = inject(key);
 const name = ref("");
 const email = ref("");
 const password = ref("");
-const errorMessage = ref("");
+const errorMessage = ref({ name: "", email: "", password: "" });
 
 const singUpApp = async () => {
     singUp(name.value, email.value, password.value)
@@ -67,13 +78,13 @@ const singUpApp = async () => {
                     store.authUser();
                     router.push("/");
                 })
-                .catch((err) => {
-                    errorMessage.value = err.response.data.errorMessage;
+                .catch((Error) => {
+                    throw new Error(`${Error}: login失敗`);
                 });
         })
-        .catch(() => {
-            errorMessage.value =
-                "新規登録できませんでした。メールアドレスを確認ください。";
+        .catch((Error) => {
+            const ErrorRes = Error.response.data.errors;
+            errorMessage.value = reactive(ErrorRes);
         });
 };
 </script>
@@ -105,6 +116,12 @@ const singUpApp = async () => {
 }
 .singupForm__label {
     width: 10rem;
+}
+.singupForm__tr {
+    height: 38px;
+}
+.error {
+    color: red;
 }
 .singupForm__button {
     span {
