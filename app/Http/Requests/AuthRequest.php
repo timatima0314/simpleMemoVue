@@ -33,7 +33,6 @@ class AuthRequest extends FormRequest
         return [
             'email.required' => ':attributeは必須項目です。',
             'email.email' => '無効の:attributeです。',
-
             'password.required' => ':attributeは必須項目です。',
         ];
     }

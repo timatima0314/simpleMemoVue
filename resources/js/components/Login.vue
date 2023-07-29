@@ -40,8 +40,10 @@
                             <td></td>
                             <td style="height: 3rem">
                                 <input
-                                    class="visually-hidden"
-                                    type="radio"
+                                    style="width: 1rem"
+                                    type="checkbox"
+                                    v-model="loginRecordPermit"
+                                    checked
                                 /><label>ログイン情報を記憶</label>
                             </td>
                         </tr>
@@ -60,28 +62,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject, reactive } from "vue";
+import { ref, inject } from "vue";
 import { useRouter } from "vue-router";
-import { login } from "../api/authApi";
+import { login, getAuth, loginRecord } from "../api/authApi";
 import { key } from "../store/index";
 
 const router = useRouter();
-const email = ref("");
-const password = ref("");
+const email = ref("test2@example.com");
+const password = ref("Kz5guSRG");
 const store = inject(key);
+const loginRecordPermit = ref(true);
 const valiErrorMessage = ref({ email: "", password: "" });
 const errorMessage = ref("");
 
 const loginApp = () => {
     valiErrorMessage.value = { email: "", password: "" };
     login(email.value, password.value)
-        .then(() => {
+        .then(async () => {
             store.authUser();
+            const { id } = await getAuth().catch((Error) => {
+                throw new Error(`${Error.message}: getAuth失敗`);
+            });
+            loginRecordPermit.value ? loginRecord(id) : null;
             router.push("/");
         })
         .catch((Error) => {
             if (Error.response.status == 400) {
-                console.log(Error);
                 const ErrorRes = Error.response.data.errors;
                 valiErrorMessage.value = ErrorRes;
             } else {
@@ -140,44 +146,6 @@ const loginApp = () => {
     width: 1px;
     margin: -1px;
     padding: 0;
-}
-label {
-    cursor: pointer;
-    padding-left: 30px;
-    position: relative;
-}
-
-label::before,
-label::after {
-    content: "";
-    display: block;
-    position: absolute;
-}
-
-label::before {
-    background-color: #fff;
-    border-radius: 0%;
-    border: 1px solid #ddd;
-    width: 20px;
-    height: 20px;
-    transform: translateY(-50%);
-    top: 50%;
-    left: 5px;
-}
-
-label::after {
-    border-bottom: 2px solid #ddd;
-    border-left: 2px solid #ddd;
-    opacity: 0;
-    height: 5px;
-    width: 10px;
-    transform: rotate(-45deg);
-    top: 2px;
-    left: 10px;
-}
-
-input:checked + label::after {
-    opacity: 1;
 }
 .error {
     color: red;

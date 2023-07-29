@@ -22,6 +22,7 @@ Route::group(['middlewarewe' => 'auth:sanctum'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('singUp', [RegisterController::class, 'register']);
+    Route::post('authenticated', [AuthController::class, 'authenticated']);
 
     Route::get('user', function (Request $request) {
         return $request->user();

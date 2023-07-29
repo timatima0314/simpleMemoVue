@@ -27,4 +27,8 @@ const getAuth = async () => {
     return data
 }
 
-export { login, logout, singUp, getAuth }
+const loginRecord = async (id: number) => {
+    await axios.post(`/api/authenticated`, { user_id: id });
+};
+
+export { login, logout, singUp, getAuth, loginRecord }
